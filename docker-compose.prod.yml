@@ -8,6 +8,7 @@ services:
     command: gunicorn hello_django.wsgi:application --bind 0.0.0.0:8100
     volumes:
       - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
     # Now, port 8000 is only exposed internally, to other Docker services.
     # The port will no longer be published to the host machine.
     # https://stackoverflow.com/questions/40801772/what-is-the-difference-between-docker-compose-ports-vs-expose
@@ -29,6 +30,7 @@ services:
     build: ./nginx
     volumes:
       - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
     ports:
       - 1337:80
     depends_on:
@@ -36,3 +38,4 @@ services:
 volumes:
   postgres_data:
   static_volume:
+  media_volume:
