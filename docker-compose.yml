@@ -24,6 +24,10 @@ services:
       - POSTGRES_USER=hello_django
       - POSTGRES_PASSWORD=hello_django
       - POSTGRES_DB=hello_django_dev
+  adminer:
+    image: adminer
+    ports:
+      - 8200:8080
 
 volumes:
   postgres_data:
