@@ -6,8 +6,15 @@ services:
       context: ./app
       dockerfile: Dockerfile.prod
     command: gunicorn hello_django.wsgi:application --bind 0.0.0.0:8100
-    ports:
-      - 8100:8100
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    # Now, port 8000 is only exposed internally, to other Docker services.
+    # The port will no longer be published to the host machine.
+    # https://stackoverflow.com/questions/40801772/what-is-the-difference-between-docker-compose-ports-vs-expose
+    expose:
+      - 8100
+    # ports:
+    #   - 8100:8100
     env_file:
       - ./.env.prod
     depends_on:
@@ -18,6 +25,14 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env.prod_db
-
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
 volumes:
   postgres_data:
+  static_volume:
